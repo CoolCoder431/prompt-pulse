@@ -1,6 +1,5 @@
-// frontend/src/utils/customFetch.js
-
-const BASE_URL = 'http://127.0.0.1:5001/api';
+// Change this line to use your real live Render server URL!
+const BASE_URL = 'https://prompt-pulse.onrender.com/api';
 
 export const customFetch = async (endpoint, options = {}) => {
   // 1. Grab the secure JWT token from localStorage
