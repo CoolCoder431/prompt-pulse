@@ -11,31 +11,32 @@ function LoginForm({ toggleForm }) {
     password: '',
   });
 
+  // 🔌 RE-ADD THIS MISSING FUNCTION BLOCK RIGHT HERE:
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  const loadId = toast.loading('Logging you in...');
+    e.preventDefault();
+    const loadId = toast.loading('Logging you in...');
 
-  try {
-    // Hit our backend login endpoint
-    const data = await customFetch('/auth/login', {
-      method: 'POST',
-      body: JSON.stringify(formData),
-    });
+    try {
+      const data = await customFetch('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify(formData),
+      });
 
-    // 🔑 SAVE THE TOKEN TO DISK IMMEDIATELY!
-    if (data && data.token) {
-      localStorage.setItem('token', data.token);
-    } else {
-      console.warn("Backend response didn't contain a token parameter!");
+      // Save the token to local storage securely
+      if (data && data.token) {
+        localStorage.setItem('token', data.token);
+      }
+
+      login(data);
+      toast.success(`Welcome back, ${data.username}!`, { id: loadId });
+    } catch (error) {
+      toast.error(error.message || 'Login failed', { id: loadId });
     }
-
-    // Save user to context state
-    login(data);
-    toast.success(`Welcome back, ${data.username}!`, { id: loadId });
-  } catch (error) {
-    toast.error(error.message || 'Login failed', { id: loadId });
-  }
-};
+  };
 
   return (
     <div style={formCardStyle}>
@@ -46,7 +47,7 @@ function LoginForm({ toggleForm }) {
           name="email"
           placeholder="Email Address"
           value={formData.email}
-          onChange={handleChange}
+          onChange={handleChange} // 💡 Calls the function we re-added above!
           style={inputStyle}
           required
         />
@@ -55,7 +56,7 @@ function LoginForm({ toggleForm }) {
           name="password"
           placeholder="Password"
           value={formData.password}
-          onChange={handleChange}
+          onChange={handleChange} // 💡 Calls the function we re-added above!
           style={inputStyle}
           required
         />
@@ -69,7 +70,7 @@ function LoginForm({ toggleForm }) {
   );
 }
 
-// Reuse same style parameters for visual consistency
+// (Keep your existing styles parameters down here...)
 const formCardStyle = { maxWidth: '400px', margin: '30px auto', padding: '30px', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', backgroundColor: '#fff', fontFamily: 'sans-serif' };
 const formStyle = { display: 'flex', flexDirection: 'column', gap: '15px' };
 const inputStyle = { padding: '12px', borderRadius: '6px', border: '1px solid #ccc', fontSize: '16px' };
