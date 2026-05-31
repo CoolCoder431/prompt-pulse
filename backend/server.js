@@ -23,14 +23,10 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      // During deployment, if we miss an origin, we can temporarily allow it or log it
-      return callback(null, true); // Set to true to avoid initial deployment CORS blockages
-    }
     return callback(null, true);
   },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Explicitly permit DELETE calls
   credentials: true
 }));
 

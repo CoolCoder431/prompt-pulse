@@ -36,7 +36,7 @@ function SocialModal({ type, data, onClose, onProfileUpdate }) {
 
       // We bypass customFetch here since FormData requires specific boundary headers browser handles automatically
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5001/api/auth/profile', {
+      const response = await fetch('https://prompt-pulse.onrender.com/api/auth/profile', {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`

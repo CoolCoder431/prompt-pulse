@@ -1,17 +1,20 @@
-// Change this line to use your real live Render server URL!
 const BASE_URL = 'https://prompt-pulse.onrender.com/api';
 
 export const customFetch = async (endpoint, options = {}) => {
-  // 1. Grab the secure JWT token from localStorage
   const token = localStorage.getItem('token');
 
-  // 2. Configure default headers for JSON transmission
+  // Check if we are passing a file (FormData)
+  const isFormData = options.body instanceof FormData;
+
   const headers = {
-    'Content-Type': 'application/json',
     ...options.headers,
   };
 
-  // 3. Inject the Bearer token into the Authorization header if it exists
+  // Only force JSON headers if we are NOT sending a profile picture file
+  if (!isFormData) {
+    headers['Content-Type'] = 'application/json';
+  }
+
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
   }
@@ -21,15 +24,12 @@ export const customFetch = async (endpoint, options = {}) => {
     headers,
   };
 
-  // 4. Fire the native request
   const response = await fetch(`${BASE_URL}${endpoint}`, config);
 
-  // 5. Handle errors gracefully if the status code is bad (e.g., 401, 400, 500)
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
     throw new Error(errorData.message || 'Something went wrong with the request');
   }
 
-  // 6. Return the parsed JSON response
   return response.json();
 };
