@@ -19,6 +19,8 @@ function PromptCard({ prompt, onLikeToggle, onOpenLikesModal, onDeletePrompt }) 
   };
 
   const handleDeleteClick = () => {
+    console.log("onDeletePrompt =", onDeletePrompt);
+    console.log("_id =", _id);
     if (window.confirm('Are you absolutely sure you want to delete this prompt card?')) {
       onDeletePrompt(_id);
     }
