@@ -11,28 +11,31 @@ function LoginForm({ toggleForm }) {
     password: '',
   });
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const loadId = toast.loading('Logging you in...');
+  e.preventDefault();
+  const loadId = toast.loading('Logging you in...');
 
-    try {
-      // Hit our backend login endpoint from Step 11
-      const data = await customFetch('/auth/login', {
-        method: 'POST',
-        body: JSON.stringify(formData),
-      });
+  try {
+    // Hit our backend login endpoint
+    const data = await customFetch('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify(formData),
+    });
 
-      // Save user to context state
-      login(data);
-      toast.success(`Welcome back, ${data.username}!`, { id: loadId });
-    } catch (error) {
-      toast.error(error.message || 'Login failed', { id: loadId });
+    // 🔑 SAVE THE TOKEN TO DISK IMMEDIATELY!
+    if (data && data.token) {
+      localStorage.setItem('token', data.token);
+    } else {
+      console.warn("Backend response didn't contain a token parameter!");
     }
-  };
+
+    // Save user to context state
+    login(data);
+    toast.success(`Welcome back, ${data.username}!`, { id: loadId });
+  } catch (error) {
+    toast.error(error.message || 'Login failed', { id: loadId });
+  }
+};
 
   return (
     <div style={formCardStyle}>
