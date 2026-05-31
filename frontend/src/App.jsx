@@ -45,60 +45,44 @@ function App() {
   };
 
   const handleLikeToggle = async (promptId) => {
-  try {
-    // Send the network update to the backend
-    const updatedPrompt = await customFetch(`/prompts/${promptId}/like`, {
-      method: 'PUT',
-    });
+    try {
+      // Send the network update to the backend
+      const updatedPrompt = await customFetch(`/prompts/${promptId}/like`, {
+        method: 'PUT',
+      });
 
-    // FIX: Force both ID references to standard strings before making the comparison
-    setPrompts((prevPrompts) =>
-      prevPrompts.map((p) => 
-        p._id.toString() === promptId.toString() ? updatedPrompt : p
-      )
-    );
-    
-    // Smoothly keep the live modal updated if it's currently open
-    if (modalConfig.isOpen && modalConfig.type === 'likes' && modalConfig.data) {
-       setModalConfig(prev => ({ ...prev, data: updatedPrompt.likes }));
+      // Force both ID references to standard strings before making the comparison
+      setPrompts((prevPrompts) =>
+        prevPrompts.map((p) => 
+          p._id.toString() === promptId.toString() ? updatedPrompt : p
+        )
+      );
+      
+      // Smoothly keep the live modal updated if it's currently open
+      if (modalConfig.isOpen && modalConfig.type === 'likes' && modalConfig.data) {
+         setModalConfig(prev => ({ ...prev, data: updatedPrompt.likes }));
+      }
+    } catch (error) {
+      toast.error('Could not log interaction');
     }
-  } catch (error) {
-    toast.error('Could not log interaction');
-  }
-};
+  };
 
-  // frontend/src/App.jsx
+  const handleDeletePrompt = async (promptId) => {
+    const loadId = toast.loading('Deleting prompt card...');
+    try {
+      // Send secure DELETE request directly to our parameter route
+      await customFetch(`/prompts/${promptId}`, {
+        method: 'DELETE',
+      });
 
-// Add this handler method alongside your other feed update loops:
-const handleDeletePrompt = async (promptId) => {
-  const loadId = toast.loading('Deleting prompt card...');
-  try {
-    // Send secure DELETE request directly to our parameter route
-    await customFetch(`/prompts/${promptId}`, {
-      method: 'DELETE',
-    });
-
-    toast.success('Prompt removed successfully!', { id: loadId });
-    
-    // Filter out the deleted item from your local React state array instantly
-    setPrompts((prevPrompts) => prevPrompts.filter((p) => p._id !== promptId));
-  } catch (error) {
-    toast.error(error.message || 'Failed to delete prompt card', { id: loadId });
-  }
-};
-
-// ... scroll down into your component return tree where you map over prompts.
-// Update the <PromptCard /> instance to include this new hook prop:
-
-{prompts.map((prompt) => (
-  <PromptCard 
-    key={prompt._id} 
-    prompt={prompt} 
-    onLikeToggle={handleLikeToggle}
-    onOpenLikesModal={(likersData) => setModalConfig({ isOpen: true, type: 'likes', data: likersData })}
-    onDeletePrompt={handleDeletePrompt} // <-- ADD THIS PROP LINE HERE
-  />
-))}
+      toast.success('Prompt removed successfully!', { id: loadId });
+      
+      // Filter out the deleted item from your local React state array instantly
+      setPrompts((prevPrompts) => prevPrompts.filter((p) => p._id !== promptId));
+    } catch (error) {
+      toast.error(error.message || 'Failed to delete prompt card', { id: loadId });
+    }
+  };
 
   const handleProfileUpdateSuccess = (updatedUserData) => {
     localStorage.setItem('token', updatedUserData.token);
@@ -183,6 +167,7 @@ const handleDeletePrompt = async (promptId) => {
                     prompt={prompt} 
                     onLikeToggle={handleLikeToggle}
                     onOpenLikesModal={(likersData) => setModalConfig({ isOpen: true, type: 'likes', data: likersData })}
+                    onDeletePrompt={handleDeletePrompt} // Perfect connection hooked up here!
                   />
                 ))
               )}
