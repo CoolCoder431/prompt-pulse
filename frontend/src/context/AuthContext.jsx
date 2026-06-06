@@ -7,23 +7,12 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-
   useEffect(() => {
     const checkLoggedInUser = async () => {
-      const token = localStorage.getItem('token');
-      
-      if (!token) {
-        setLoading(false);
-        return;
-      }
-
       try {
-
         const userData = await customFetch('/auth/me');
         setUser(userData);
-      } catch (error) {
-        console.error('Session expired or invalid token:', error.message);
-        localStorage.removeItem('token'); 
+      } catch {
         setUser(null);
       } finally {
         setLoading(false);
@@ -33,20 +22,21 @@ export const AuthProvider = ({ children }) => {
     checkLoggedInUser();
   }, []);
 
-
   const login = (userData) => {
-    localStorage.setItem('token', userData.token);
     setUser({
       _id: userData._id,
       username: userData.username,
       email: userData.email,
-      avatar: userData.avatar
+      avatar: userData.avatar,
     });
   };
 
-
-  const logout = () => {
-    localStorage.removeItem('token');
+  const logout = async () => {
+    try {
+      await customFetch('/auth/logout', { method: 'POST' });
+    } catch (error) {
+      console.error('Logout error:', error.message);
+    }
     setUser(null);
   };
 
@@ -58,6 +48,7 @@ export const AuthProvider = ({ children }) => {
 };
 
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {

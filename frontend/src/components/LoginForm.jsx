@@ -27,10 +27,6 @@ function LoginForm({ toggleForm }) {
       });
 
 
-      if (data && data.token) {
-        localStorage.setItem('token', data.token);
-      }
-
       login(data);
       toast.success(`Welcome back, ${data.username}!`, { id: loadId });
     } catch (error) {

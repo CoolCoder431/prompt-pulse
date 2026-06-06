@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { customFetch } from '../utils/customFetch';
 
 function SocialModal({ type, data, onClose, onProfileUpdate }) {
 
@@ -35,23 +36,13 @@ function SocialModal({ type, data, onClose, onProfileUpdate }) {
       }
 
 
-      const token = localStorage.getItem('token');
-      const response = await fetch('https://prompt-pulse.onrender.com/api/auth/profile', {
+      const result = await customFetch('/auth/profile', {
         method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        body: formData
+        body: formData,
       });
 
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message || 'Failed to update profile');
-      }
-
       toast.success('Profile updated successfully! 🎉', { id: loadId });
-      onProfileUpdate(result); 
+      onProfileUpdate(result);
       onClose();
     } catch (error) {
       toast.error(error.message || 'Update failed', { id: loadId });

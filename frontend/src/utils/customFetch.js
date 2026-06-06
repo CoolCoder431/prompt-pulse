@@ -1,26 +1,20 @@
 const BASE_URL = 'https://prompt-pulse.onrender.com/api';
 
 export const customFetch = async (endpoint, options = {}) => {
-  const token = localStorage.getItem('token');
-
   const isFormData = options.body instanceof FormData;
 
   const headers = {
     ...options.headers,
   };
 
-
   if (!isFormData) {
     headers['Content-Type'] = 'application/json';
-  }
-
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
   }
 
   const config = {
     ...options,
     headers,
+    credentials: 'include',
   };
 
   const response = await fetch(`${BASE_URL}${endpoint}`, config);
