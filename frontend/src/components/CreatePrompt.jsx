@@ -1,4 +1,3 @@
-// frontend/src/components/CreatePrompt.jsx
 import React, { useState } from 'react';
 import { customFetch } from '../utils/customFetch';
 import { toast } from 'react-hot-toast';
@@ -20,7 +19,7 @@ function CreatePrompt({ onPromptCreated }) {
     const loadId = toast.loading('Publishing your prompt card...');
 
     try {
-      // Send secure POST request directly to our new endpoint from Step 18
+
       const data = await customFetch('/prompts', {
         method: 'POST',
         body: JSON.stringify(formData),
@@ -28,10 +27,10 @@ function CreatePrompt({ onPromptCreated }) {
 
       toast.success('Prompt successfully pushed to the feed! ⚡️', { id: loadId });
       
-      // Reset form text fields completely
+
       setFormData({ title: '', instruction: '', aiModel: 'ChatGPT', tags: '' });
       
-      // Parent trigger to refresh feed array instantly without manual page refreshes
+
       if (onPromptCreated) {
         onPromptCreated(data);
       }
@@ -93,7 +92,7 @@ function CreatePrompt({ onPromptCreated }) {
   );
 }
 
-// Inline Styles for Dashboard Sandbox Cleanliness
+
 const formCardStyle = {
   backgroundColor: '#ffffff',
   padding: '25px',

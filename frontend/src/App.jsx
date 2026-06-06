@@ -1,4 +1,3 @@
-// frontend/src/App.jsx
 import React, { useState, useEffect } from 'react';
 import { Toaster, toast } from 'react-hot-toast';
 import { useAuth } from './context/AuthContext';
@@ -15,10 +14,10 @@ function App() {
   const [prompts, setPrompts] = useState([]);
   const [fetchingFeed, setFetchingFeed] = useState(false);
 
-  // Floating Action Button Toggle State
+
   const [isCreating, setIsCreating] = useState(false);
 
-  // Global Interaction Modal Control States
+
   const [modalConfig, setModalConfig] = useState({ isOpen: false, type: '', data: null });
 
   useEffect(() => {
@@ -46,19 +45,19 @@ function App() {
 
   const handleLikeToggle = async (promptId) => {
     try {
-      // Send the network update to the backend
+
       const updatedPrompt = await customFetch(`/prompts/${promptId}/like`, {
         method: 'PUT',
       });
 
-      // Force both ID references to standard strings before making the comparison
+
       setPrompts((prevPrompts) =>
         prevPrompts.map((p) => 
           p._id.toString() === promptId.toString() ? updatedPrompt : p
         )
       );
       
-      // Smoothly keep the live modal updated if it's currently open
+
       if (modalConfig.isOpen && modalConfig.type === 'likes' && modalConfig.data) {
          setModalConfig(prev => ({ ...prev, data: updatedPrompt.likes }));
       }
@@ -70,14 +69,14 @@ function App() {
   const handleDeletePrompt = async (promptId) => {
     const loadId = toast.loading('Deleting prompt card...');
     try {
-      // Send secure DELETE request directly to our parameter route
+
       await customFetch(`/prompts/${promptId}`, {
         method: 'DELETE',
       });
 
       toast.success('Prompt removed successfully!', { id: loadId });
       
-      // Filter out the deleted item from your local React state array instantly
+
       setPrompts((prevPrompts) => prevPrompts.filter((p) => p._id !== promptId));
     } catch (error) {
       toast.error(error.message || 'Failed to delete prompt card', { id: loadId });
@@ -167,7 +166,7 @@ function App() {
                     prompt={prompt} 
                     onLikeToggle={handleLikeToggle}
                     onOpenLikesModal={(likersData) => setModalConfig({ isOpen: true, type: 'likes', data: likersData })}
-                    onDeletePrompt={handleDeletePrompt} // Perfect connection hooked up here!
+                    onDeletePrompt={handleDeletePrompt} 
                   />
                 ))
               )}
@@ -200,7 +199,7 @@ function App() {
   );
 }
 
-// Global Injectable CSS Core Rules
+
 const spinAnimationKeyframes = `
   @keyframes spin {
     0% { transform: rotate(0deg); }
@@ -208,7 +207,7 @@ const spinAnimationKeyframes = `
   }
 `;
 
-// Interface Styles Layout Objects
+
 const appContainerStyle = { backgroundColor: '#f7fafc', minHeight: '100vh', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' };
 const loadingContainerStyle = { display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: '#f7fafc' };
 const spinnerStyle = { width: '40px', height: '40px', border: '4px solid #e2e8f0', borderTop: '4px solid #3182ce', borderRadius: '50%', animation: 'spin 1s linear infinite' };

@@ -1,9 +1,4 @@
-// backend/controllers/promptController.js
 const Prompt = require('../models/Prompt');
-
-// @desc    Create a new prompt card
-// @route   POST /api/prompts
-// @access  Protected
 const createPrompt = async (req, res) => {
   try {
     const { title, instruction, aiModel, tags } = req.body;
@@ -29,9 +24,6 @@ const createPrompt = async (req, res) => {
   }
 };
 
-// @desc    Get all prompts
-// @route   GET /api/prompts
-// @access  Public
 const getAllPrompts = async (req, res) => {
   try {
     const prompts = await Prompt.find()
@@ -45,9 +37,6 @@ const getAllPrompts = async (req, res) => {
   }
 };
 
-// @desc    Like / Unlike toggle engine
-// @route   PUT /api/prompts/:id/like
-// @access  Protected
 const likePrompt = async (req, res) => {
   try {
     const prompt = await Prompt.findById(req.params.id);
@@ -57,7 +46,7 @@ const likePrompt = async (req, res) => {
 
     const currentUserId = req.user._id.toString();
     
-    // Safely pull string matches out of whatever the current shape of the array is
+
     const currentLikesStrings = prompt.likes.map(id => {
       if (!id) return '';
       return typeof id === 'object' && id._id ? id._id.toString() : id.toString();
@@ -66,16 +55,16 @@ const likePrompt = async (req, res) => {
     const hasLiked = currentLikesStrings.includes(currentUserId);
 
     if (hasLiked) {
-      // Pull out your user ID
+
       prompt.likes = currentLikesStrings.filter(id => id !== currentUserId);
     } else {
-      // Add your user ID
+
       prompt.likes.push(req.user._id);
     }
 
     await prompt.save();
 
-    // Re-fetch fully populated so the frontend app receives a perfectly clean schema
+
     const updatedPrompt = await Prompt.findById(prompt._id)
       .populate('creator', 'username avatar')
       .populate('likes', 'username avatar');
@@ -86,9 +75,6 @@ const likePrompt = async (req, res) => {
   }
 };
 
-// @desc    Delete a specific prompt card
-// @route   DELETE /api/prompts/:id
-// @access  Protected
 const deletePrompt = async (req, res) => {
   try {
     const prompt = await Prompt.findById(req.params.id);

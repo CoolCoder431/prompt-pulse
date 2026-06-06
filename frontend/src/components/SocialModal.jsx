@@ -1,15 +1,15 @@
-// frontend/src/components/SocialModal.jsx
+
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
 
 function SocialModal({ type, data, onClose, onProfileUpdate }) {
-  // 1. STATE FOR PROFILE EDIT MODE
+
   const [username, setUsername] = useState(data?.username || '');
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(data?.avatar || '');
   const [updating, setUpdating] = useState(false);
 
-  // Handle local image file selection and create a fast UI preview url
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -27,14 +27,14 @@ function SocialModal({ type, data, onClose, onProfileUpdate }) {
     const loadId = toast.loading('Syncing your profile updates...');
 
     try {
-      // Because we are uploading a physical binary file, we MUST use standard FormData
+
       const formData = new FormData();
       formData.append('username', username);
       if (selectedFile) {
         formData.append('avatar', selectedFile);
       }
 
-      // We bypass customFetch here since FormData requires specific boundary headers browser handles automatically
+
       const token = localStorage.getItem('token');
       const response = await fetch('https://prompt-pulse.onrender.com/api/auth/profile', {
         method: 'PUT',
@@ -51,7 +51,7 @@ function SocialModal({ type, data, onClose, onProfileUpdate }) {
       }
 
       toast.success('Profile updated successfully! 🎉', { id: loadId });
-      onProfileUpdate(result); // Feed updated user metrics up into core state
+      onProfileUpdate(result); 
       onClose();
     } catch (error) {
       toast.error(error.message || 'Update failed', { id: loadId });
@@ -125,7 +125,7 @@ function SocialModal({ type, data, onClose, onProfileUpdate }) {
   );
 }
 
-// Modal Layout UI Objects
+
 const modalOverlayStyle = { position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.4)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000 };
 const modalContentStyle = { backgroundColor: '#fff', padding: '30px', borderRadius: '12px', width: '90%', maxWidth: '400px', boxShadow: '0 10px 25px rgba(0,0,0,0.1)', position: 'relative', textAlign: 'left' };
 const closeButtonStyle = { position: 'absolute', top: '15px', right: '20px', background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#a0aec0' };
@@ -138,7 +138,7 @@ const labelStyle = { fontSize: '14px', fontWeight: '600', color: '#4a5568' };
 const inputStyle = { padding: '10px 12px', borderRadius: '6px', border: '1px solid #cbd5e0', fontSize: '15px' };
 const saveButtonStyle = { padding: '11px', borderRadius: '6px', border: 'none', backgroundColor: '#3182ce', color: '#fff', fontSize: '15px', fontWeight: 'bold', cursor: 'pointer' };
 
-// Likes Interaction Styles
+
 const likesListContainerStyle = { display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '250px', overflowY: 'auto' };
 const likerRowStyle = { display: 'flex', alignItems: 'center', gap: '12px', padding: '6px 0', borderBottom: '1px solid #f7fafc' };
 const likerAvatarStyle = { width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover' };

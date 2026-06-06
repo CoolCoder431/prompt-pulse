@@ -1,15 +1,15 @@
-// backend/models/Prompt.js
+
 const mongoose = require('mongoose');
 
 const promptSchema = new mongoose.Schema({
-  // 1. Relational Link: Attaches the prompt directly to a User ID
+
   creator: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
   },
   
-  // 2. The Title of the Prompt Card
+
   title: {
     type: String,
     required: [true, 'Please add a title for your prompt card'],
@@ -17,13 +17,13 @@ const promptSchema = new mongoose.Schema({
     maxlength: [100, 'Title cannot exceed 100 characters']
   },
   
-  // 3. The actual raw instructions text copied into the clipboard
+
   instruction: {
     type: String,
     required: [true, 'Please provide the raw AI prompt text']
   },
   
-  // 4. Categorized Target Engine (helps users filter the feed)
+
   aiModel: {
     type: String,
     required: [true, 'Please specify the target AI model'],
@@ -33,13 +33,13 @@ const promptSchema = new mongoose.Schema({
     }
   },
   
-  // 5. Searchable descriptive keywords
+
   tags: [{
     type: String,
     trim: true
   }],
   
-  // 6. Metrics tracking arrays (stores User IDs who interacted)
+
   likes: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
@@ -50,11 +50,11 @@ const promptSchema = new mongoose.Schema({
     ref: 'User'
   }]
 }, {
-  // Automatically handles createdAt and updatedAt timestamps for sorting the feed
+
   timestamps: true
 });
 
-// Create a compound text index to enable blazing-fast global search lookups later
+
 promptSchema.index({ title: 'text', instruction: 'text', tags: 'text' });
 
 const Prompt = mongoose.model('Prompt', promptSchema);

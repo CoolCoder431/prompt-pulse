@@ -1,4 +1,4 @@
-// frontend/src/components/LoginForm.jsx
+
 import React, { useState } from 'react';
 import { customFetch } from '../utils/customFetch';
 import { useAuth } from '../context/AuthContext';
@@ -11,7 +11,7 @@ function LoginForm({ toggleForm }) {
     password: '',
   });
 
-  // 🔌 RE-ADD THIS MISSING FUNCTION BLOCK RIGHT HERE:
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -26,7 +26,7 @@ function LoginForm({ toggleForm }) {
         body: JSON.stringify(formData),
       });
 
-      // Save the token to local storage securely
+
       if (data && data.token) {
         localStorage.setItem('token', data.token);
       }
@@ -47,7 +47,7 @@ function LoginForm({ toggleForm }) {
           name="email"
           placeholder="Email Address"
           value={formData.email}
-          onChange={handleChange} // 💡 Calls the function we re-added above!
+          onChange={handleChange} 
           style={inputStyle}
           required
         />
@@ -56,7 +56,7 @@ function LoginForm({ toggleForm }) {
           name="password"
           placeholder="Password"
           value={formData.password}
-          onChange={handleChange} // 💡 Calls the function we re-added above!
+          onChange={handleChange} 
           style={inputStyle}
           required
         />
@@ -70,7 +70,7 @@ function LoginForm({ toggleForm }) {
   );
 }
 
-// (Keep your existing styles parameters down here...)
+
 const formCardStyle = { maxWidth: '400px', margin: '30px auto', padding: '30px', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', backgroundColor: '#fff', fontFamily: 'sans-serif' };
 const formStyle = { display: 'flex', flexDirection: 'column', gap: '15px' };
 const inputStyle = { padding: '12px', borderRadius: '6px', border: '1px solid #ccc', fontSize: '16px' };

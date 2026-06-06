@@ -1,4 +1,3 @@
-// frontend/src/context/AuthContext.jsx
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { customFetch } from '../utils/customFetch';
 
@@ -8,7 +7,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Automatically check if a user is logged in whenever the page refreshes
+
   useEffect(() => {
     const checkLoggedInUser = async () => {
       const token = localStorage.getItem('token');
@@ -19,12 +18,12 @@ export const AuthProvider = ({ children }) => {
       }
 
       try {
-        // Hit our protected backend /me endpoint from Step 11 to verify the token
+
         const userData = await customFetch('/auth/me');
         setUser(userData);
       } catch (error) {
         console.error('Session expired or invalid token:', error.message);
-        localStorage.removeItem('token'); // Clear broken token
+        localStorage.removeItem('token'); 
         setUser(null);
       } finally {
         setLoading(false);
@@ -34,7 +33,7 @@ export const AuthProvider = ({ children }) => {
     checkLoggedInUser();
   }, []);
 
-  // Login handler function
+
   const login = (userData) => {
     localStorage.setItem('token', userData.token);
     setUser({
@@ -45,7 +44,7 @@ export const AuthProvider = ({ children }) => {
     });
   };
 
-  // Logout handler function
+
   const logout = () => {
     localStorage.removeItem('token');
     setUser(null);
@@ -58,7 +57,7 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// Custom shortcut hook so we don't have to import useContext(AuthContext) everywhere
+
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {

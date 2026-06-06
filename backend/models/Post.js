@@ -1,4 +1,3 @@
-// backend/models/Post.js
 const mongoose = require('mongoose');
 
 const postSchema = new mongoose.Schema(
@@ -36,29 +35,27 @@ const postSchema = new mongoose.Schema(
       },
     },
     previewImage: {
-      type: String, // URL to Cloudinary/S3 image (Optional)
+      type: String, 
       default: '',
     },
-    // Array of User IDs who liked this post
     likes: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
       },
     ],
-    // Reshare Logic (Twitter Retweet equivalent)
     isReshare: {
       type: Boolean,
       default: false,
     },
     originalPost: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Post', // Points back to the source prompt if this is a reshare
+      ref: 'Post',
       default: null,
     },
   },
   {
-    timestamps: true, // Captures when the prompt was posted
+    timestamps: true,
   }
 );
 

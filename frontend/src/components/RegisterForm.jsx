@@ -1,4 +1,4 @@
-// frontend/src/components/RegisterForm.jsx
+
 import React, { useState } from 'react';
 import { customFetch } from '../utils/customFetch';
 import { useAuth } from '../context/AuthContext';
@@ -21,13 +21,13 @@ function RegisterForm({ toggleForm }) {
     const loadId = toast.loading('Creating your account...');
 
     try {
-      // Hit our backend register endpoint from Step 11
+
       const data = await customFetch('/auth/register', {
         method: 'POST',
         body: JSON.stringify(formData),
       });
 
-      // Log the user into global context state
+
       login(data);
       toast.success(`Welcome, ${data.username}!`, { id: loadId });
     } catch (error) {
@@ -76,7 +76,7 @@ function RegisterForm({ toggleForm }) {
   );
 }
 
-// Inline styles for rapid scaffolding before CSS framework integration
+
 const formCardStyle = {
   maxWidth: '400px',
   margin: '30px auto',

@@ -3,14 +3,13 @@ const BASE_URL = 'https://prompt-pulse.onrender.com/api';
 export const customFetch = async (endpoint, options = {}) => {
   const token = localStorage.getItem('token');
 
-  // Check if we are passing a file (FormData)
   const isFormData = options.body instanceof FormData;
 
   const headers = {
     ...options.headers,
   };
 
-  // Only force JSON headers if we are NOT sending a profile picture file
+
   if (!isFormData) {
     headers['Content-Type'] = 'application/json';
   }

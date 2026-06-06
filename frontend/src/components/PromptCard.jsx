@@ -1,4 +1,4 @@
-// frontend/src/components/PromptCard.jsx
+
 import React from 'react';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
@@ -7,7 +7,7 @@ function PromptCard({ prompt, onLikeToggle, onOpenLikesModal, onDeletePrompt }) 
   const { _id, title, instruction, aiModel, tags, creator, createdAt, likes = [] } = prompt;
   const { user } = useAuth();
 
-  // 1. Authorization Match: Is the logged-in user the owner of this specific post?
+
   const isOwner = user && creator && user._id === creator._id;
 
   const likedIds = likes.map(l => typeof l === 'object' ? l._id : l);
@@ -41,7 +41,7 @@ function PromptCard({ prompt, onLikeToggle, onOpenLikesModal, onDeletePrompt }) 
         
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <span style={getBadgeStyle(aiModel)}>{aiModel}</span>
-          {/* 2. Conditional Render: Trash button ONLY displays if you own the post */}
+          {}
           {isOwner && (
             <button onClick={handleDeleteClick} style={deleteButtonStyle} title="Delete Post">
               🗑️
@@ -107,8 +107,6 @@ const likeCapsuleStyle = { display: 'flex', alignItems: 'center', gap: '4px', pa
 const heartButtonStyle = { background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center' };
 const passiveCountStyle = { color: '#4a5568' };
 const interactiveCountStyle = { color: '#2b6cb0', cursor: 'pointer', textDecoration: 'underline' };
-
-// Clean Trashcan Delete Button Style Rules
 const deleteButtonStyle = { background: 'none', border: 'none', fontSize: '15px', cursor: 'pointer', padding: '4px', borderRadius: '4px', transition: 'background 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center' };
 
 export default PromptCard;

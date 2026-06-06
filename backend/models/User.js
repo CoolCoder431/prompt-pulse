@@ -1,4 +1,3 @@
-// backend/models/User.js
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
@@ -26,12 +25,8 @@ const userSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// backend/models/User.js
-
-// 1. Modernized Password Encryption Pre-Save Hook
-// Notice: We completely dropped 'next' from the arguments and the body
 userSchema.pre('save', async function () {
-  // If the password field hasn't been changed, skip hashing entirely
+
   if (!this.isModified('password')) {
     return;
   }
@@ -40,7 +35,7 @@ userSchema.pre('save', async function () {
   this.password = await bcrypt.hash(this.password, salt);
 });
 
-// 2. Password Comparison Method
+
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
