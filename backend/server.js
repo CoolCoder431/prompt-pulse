@@ -1,6 +1,7 @@
 // backend/server.js
 const express = require('express');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const connectDB = require('./config/db');
 require('dotenv').config();
 
@@ -13,6 +14,7 @@ const app = express();
 connectDB();
 
 app.use(express.json());
+app.use(cookieParser());
 
 // UPDATE CORS: Allow requests from localhost for testing AND your future Vercel domains
 const allowedOrigins = [

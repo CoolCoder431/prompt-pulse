@@ -84,8 +84,7 @@ function App() {
   };
 
   const handleProfileUpdateSuccess = (updatedUserData) => {
-    localStorage.setItem('token', updatedUserData.token);
-    login(updatedUserData); 
+    login(updatedUserData);
     setPrompts(prev => prev.map(p => p.creator._id === updatedUserData._id ? { ...p, creator: updatedUserData } : p));
   };
 

@@ -5,10 +5,16 @@ const jwt = require('jsonwebtoken');
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: '30d', 
+    expiresIn: '30d',
   });
 };
 
+const cookieOptions = {
+  httpOnly: true,
+  secure: true,
+  sameSite: 'None',
+  maxAge: 30 * 24 * 60 * 60 * 1000,
+};
 
 const registerUser = async (req, res) => {
   const { username, email, password } = req.body;
@@ -33,13 +39,12 @@ const registerUser = async (req, res) => {
     });
 
     if (user) {
-
+      res.cookie('jwt', generateToken(user._id), cookieOptions);
       res.status(201).json({
         _id: user._id,
         username: user.username,
         email: user.email,
         avatar: user.avatar,
-        token: generateToken(user._id),
       });
     } else {
       res.status(400).json({ message: 'Invalid user data received' });
@@ -56,12 +61,12 @@ const loginUser = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (user && (await user.matchPassword(password))) {
+      res.cookie('jwt', generateToken(user._id), cookieOptions);
       res.json({
         _id: user._id,
         username: user.username,
         email: user.email,
         avatar: user.avatar,
-        token: generateToken(user._id),
       });
     } else {
       res.status(401).json({ message: 'Invalid email or password' });
@@ -69,6 +74,11 @@ const loginUser = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+};
+
+const logoutUser = (req, res) => {
+  res.cookie('jwt', '', { ...cookieOptions, maxAge: 0 });
+  res.json({ message: 'Logged out successfully' });
 };
 
 const updateUserProfile = async (req, res) => {
@@ -97,18 +107,17 @@ const updateUserProfile = async (req, res) => {
 
     const updatedUser = await user.save();
 
+    res.cookie('jwt', generateToken(updatedUser._id), cookieOptions);
     res.json({
       _id: updatedUser._id,
       username: updatedUser.username,
       email: updatedUser.email,
       avatar: updatedUser.avatar,
-      token: generateToken(updatedUser._id),
     });
   } catch (error) {
     res.status(500).json({ message: error.message || 'Server error uploading image' });
   }
-}; 
-
+};
 
 const getMe = async (req, res) => {
   res.json({
@@ -122,6 +131,7 @@ const getMe = async (req, res) => {
 module.exports = {
   registerUser,
   loginUser,
+  logoutUser,
   updateUserProfile,
   getMe
 };
